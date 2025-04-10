@@ -124,6 +124,9 @@ for wallet_schema in input_json:
         new_schema.extend(seg["blocks"])
     new_schemas.append(new_schema)
 
+
+print("Mixing done")
+
 # Write the new schemas to an output file.
 with open("output.json", "w") as f:
     json.dump(new_schemas, f, indent=2)
