@@ -1,5 +1,5 @@
 # kozel-mixer
-Official mixer for Kozel Software
+Official mixer of exported playgrounds for make fully randomize for Kozel Software
 
 ![image](https://github.com/user-attachments/assets/6141fb0e-0b87-4ce6-91ec-93c88a5148ff)
 
