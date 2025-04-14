@@ -83,13 +83,13 @@ for wallet_schema in input_json:
     # Iterate over each block in the wallet schema.
     for block in wallet_schema:
 
-        if block['symbol']:
+        if 'symbol' in block:
             block['symbol'] = block['symbol'].lower()
 
-        if block['dex']:
+        if 'dex' in block:
             block['dex'] = block['dex'].lower()
 
-        if block['msg']:
+        if 'msg' in block:
             block['msg'] = block['msg'].lower()
 
         # Check if the block qualifies for grouping.
