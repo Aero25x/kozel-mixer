@@ -20,8 +20,13 @@ print("""
     """)
 
 
+
 import json
 import random
+from dotenv import load_dotenv
+import os
+
+
 
 # Define block types that participate in grouping and those that do not break a group.
 MIXED_BLOCKS = ["swap", "anyExecute", "reqRpc"]
@@ -61,6 +66,13 @@ def extract_group(block):
     else:
         return None
 
+
+
+load_dotenv(dotenv_path=".env")
+
+activate_angry_mode = os.getenv("ANGRY_MODE", "FALSE").lower() == "true"
+
+
 # Process each wallet schema from the input.
 new_schemas = []
 for wallet_schema in input_json:
@@ -70,6 +82,16 @@ for wallet_schema in input_json:
 
     # Iterate over each block in the wallet schema.
     for block in wallet_schema:
+
+        if block['symbol']:
+            block['symbol'] = block['symbol'].lower()
+
+        if block['dex']:
+            block['dex'] = block['dex'].lower()
+
+        if block['msg']:
+            block['msg'] = block['msg'].lower()
+
         # Check if the block qualifies for grouping.
         if block['block'] in MIXED_BLOCKS and extract_group(block):
             group_id = extract_group(block)
@@ -99,6 +121,10 @@ for wallet_schema in input_json:
             if current_group_segment is not None:
                 segments.append({"type": "group", "group": current_group_segment["group"], "blocks": current_group_segment["blocks"]})
                 current_group_segment = None
+
+            if block['block'] == "wallet" and activate_angry_mode == True :
+                block["msg"]="angry_mode"
+
             current_segment.append(block)
 
     # After iterating through all blocks, add any remaining active segments.
@@ -124,9 +150,7 @@ for wallet_schema in input_json:
         new_schema.extend(seg["blocks"])
     new_schemas.append(new_schema)
 
-
-print("Mixing done")
-
 # Write the new schemas to an output file.
 with open("output.json", "w") as f:
-    json.dump(new_schemas, f, indent=2)
+    json.dump({"uid":"mixed_data", "tasklist":new_schemas}, f, indent=2)
+
