@@ -71,6 +71,8 @@ def extract_group(block):
 load_dotenv(dotenv_path=".env")
 
 activate_angry_mode = os.getenv("ANGRY_MODE", "FALSE").lower() == "true"
+gas_price_boost = os.getenv("GAS_BOOST", None)
+
 
 
 # Process each wallet schema from the input.
@@ -91,6 +93,10 @@ for wallet_schema in input_json:
 
         if 'msg' in block:
             block['msg'] = block['msg'].lower()
+
+
+        if block['block'] == "anyExecute" and gas_price_boost:
+            block['min_amount'] = gas_price_boost
 
         # Check if the block qualifies for grouping.
         if block['block'] in MIXED_BLOCKS and extract_group(block):
@@ -153,4 +159,3 @@ for wallet_schema in input_json:
 # Write the new schemas to an output file.
 with open("output.json", "w") as f:
     json.dump({"uid":"mixed_data", "tasklist":new_schemas}, f, indent=2)
-
