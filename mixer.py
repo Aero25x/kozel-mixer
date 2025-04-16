@@ -29,7 +29,7 @@ import os
 
 
 # Define block types that participate in grouping and those that do not break a group.
-MIXED_BLOCKS = ["swap", "anyExecute", "reqRpc"]
+MIXED_BLOCKS = ["swap", "anyExecute", "reqRpc", "saveVar"]
 NOT_BREAK_JOIN_BLOCKS = ["delay"]
 
 # Load input JSON.
@@ -71,7 +71,9 @@ def extract_group(block):
 load_dotenv(dotenv_path=".env")
 
 activate_angry_mode = os.getenv("ANGRY_MODE", "FALSE").lower() == "true"
-gas_price_boost = os.getenv("GAS_BOOST", None)
+gas_price_boost = os.getenv("GAS_BOOST_MIN", None)
+gas_price_min = int(os.getenv("GAS_BOOST_MIN", "5000000000"))
+gas_price_max = int(os.getenv("GAS_BOOST_MAX", "5000000000"))
 
 
 
@@ -96,7 +98,7 @@ for wallet_schema in input_json:
 
 
         if block['block'] == "anyExecute" and gas_price_boost:
-            block['min_amount'] = gas_price_boost
+            block['min_amount'] = str(random.randint(gas_price_min, gas_price_max))
 
         # Check if the block qualifies for grouping.
         if block['block'] in MIXED_BLOCKS and extract_group(block):
