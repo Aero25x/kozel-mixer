@@ -33,10 +33,16 @@ def extract_group(block):
         return "swap"
     elif btype in ("reqRpc", "saveVar"):
         var = block.get('symbol','').lower()
-        return var.split(':')[0] if var else None
+        if ":" in var:
+            return var.split(':')[0] if var else None
+        else:
+            return None
     elif btype == "anyExecute":
         dex = block.get('dex','').lower()
-        return dex.split(':')[0] if dex else None
+        if ":" in dex:
+            return dex.split(':')[0] if dex else None
+        else:
+            return None
     return None
 
 
